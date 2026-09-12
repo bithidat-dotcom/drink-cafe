@@ -1,0 +1,6 @@
+{
+  "name": "DRINK CAFE",
+  "description": "A premium modern coffee ordering mobile application featuring a rich menu, customization, loyalty system, and real-time order tracking.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,43 @@
+@import "tailwindcss";
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .glass {
+    @apply bg-[#1C1C1C]/70 backdrop-blur-xl border border-white/5 shadow-2xl;
+  }
+
+  .ripple-button {
+    position: relative;
+    overflow: hidden;
+  }
+  .ripple-button::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 250%;
+    padding-top: 250%;
+    background: radial-gradient(circle, rgba(255,255,255,0.4) 10%, transparent 20%);
+    background-position: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.6s ease-out, opacity 0.8s ease-out;
+  }
+  .ripple-button:active::after {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+    transition: 0s;
+  }
+}
+
+body {
+  @apply bg-[#151515] text-white overflow-x-hidden;
+}

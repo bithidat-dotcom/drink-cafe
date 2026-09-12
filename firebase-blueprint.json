@@ -1,0 +1,207 @@
+{
+  "entities": {
+    "Profile": {
+      "title": "User Profile",
+      "description": "Stores user profile and loyalty information",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "phone": { "type": "string" },
+        "email": { "type": "string" },
+        "photoUrl": { "type": "string" },
+        "loyaltyPoints": { "type": "number" }
+      },
+      "required": ["id", "name", "email", "loyaltyPoints"]
+    },
+    "Product": {
+      "title": "Product",
+      "description": "Coffee, drinks, and snacks available in the menu",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "categoryId": { "type": "string" },
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "price": { "type": "number" },
+        "image": { "type": "string" },
+        "rating": { "type": "number" },
+        "reviewCount": { "type": "number" },
+        "isPopular": { "type": "boolean" }
+      },
+      "required": ["id", "categoryId", "name", "price", "image"]
+    },
+    "Category": {
+      "title": "Category",
+      "description": "Product categories like Coffee, Tea, etc.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "icon": { "type": "string" }
+      },
+      "required": ["id", "name"]
+    },
+    "Order": {
+      "title": "Order",
+      "description": "Customer order details",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "status": { "type": "string", "enum": ["ORDER PLACED", "CONFIRMED", "PREPARING", "READY", "OUT FOR DELIVERY", "DELIVERED"] },
+        "subtotal": { "type": "number" },
+        "deliveryFee": { "type": "number" },
+        "discount": { "type": "number" },
+        "total": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "deliveryMethod": { "type": "string", "enum": ["Delivery", "Pickup"] },
+        "paymentMethod": { "type": "string", "enum": ["Cash on Delivery", "Mobile Payment", "Card"] },
+        "customerDetails": { "type": "object" }
+      },
+      "required": ["id", "userId", "status", "total", "createdAt"]
+    },
+    "OrderItem": {
+      "title": "Order Item",
+      "description": "Individual items within an order",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "orderId": { "type": "string" },
+        "productId": { "type": "string" },
+        "productName": { "type": "string" },
+        "price": { "type": "number" },
+        "quantity": { "type": "number" },
+        "customization": { "type": "object" }
+      },
+      "required": ["id", "orderId", "productId", "quantity", "price"]
+    },
+    "Offer": {
+      "title": "Offer",
+      "description": "Promotional offers and deals",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "image": { "type": "string" },
+        "discount": { "type": "number" },
+        "code": { "type": "string" }
+      },
+      "required": ["id", "title", "image", "discount"]
+    },
+    "Banner": {
+      "title": "Banner",
+      "description": "Home screen promotional banners",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "image": { "type": "string" },
+        "title": { "type": "string" },
+        "active": { "type": "boolean" }
+      },
+      "required": ["id", "image", "active"]
+    },
+    "LoyaltyTransaction": {
+      "title": "Loyalty Transaction",
+      "description": "Points earned or redeemed",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "points": { "type": "number" },
+        "type": { "type": "string", "enum": ["earn", "redeem"] },
+        "description": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "userId", "points", "type", "createdAt"]
+    },
+    "Notification": {
+      "title": "Notification",
+      "description": "In-app notifications",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "title": { "type": "string" },
+        "message": { "type": "string" },
+        "type": { "type": "string" },
+        "isRead": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "userId", "title", "message", "isRead", "createdAt"]
+    },
+    "Favorite": {
+      "title": "Favorite",
+      "description": "User's favorite products",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "productId": { "type": "string" }
+      },
+      "required": ["id", "userId", "productId"]
+    },
+    "Review": {
+      "title": "Review",
+      "description": "Product reviews and ratings",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "productId": { "type": "string" },
+        "userId": { "type": "string" },
+        "userName": { "type": "string" },
+        "rating": { "type": "number" },
+        "comment": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "productId", "userId", "rating", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/profiles/{userId}": {
+      "schema": "Profile",
+      "description": "User profiles"
+    },
+    "/products/{productId}": {
+      "schema": "Product",
+      "description": "Drink and snack products"
+    },
+    "/categories/{categoryId}": {
+      "schema": "Category",
+      "description": "Product categories"
+    },
+    "/orders/{orderId}": {
+      "schema": "Order",
+      "description": "Customer orders"
+    },
+    "/orders/{orderId}/items/{itemId}": {
+      "schema": "OrderItem",
+      "description": "Items within an order"
+    },
+    "/offers/{offerId}": {
+      "schema": "Offer",
+      "description": "Promotional offers"
+    },
+    "/banners/{bannerId}": {
+      "schema": "Banner",
+      "description": "Home screen banners"
+    },
+    "/profiles/{userId}/loyalty_transactions/{transactionId}": {
+      "schema": "LoyaltyTransaction",
+      "description": "User loyalty points history"
+    },
+    "/profiles/{userId}/notifications/{notificationId}": {
+      "schema": "Notification",
+      "description": "User notifications"
+    },
+    "/profiles/{userId}/favorites/{favoriteId}": {
+      "schema": "Favorite",
+      "description": "User favorite products"
+    },
+    "/products/{productId}/reviews/{reviewId}": {
+      "schema": "Review",
+      "description": "Product reviews"
+    }
+  }
+}
