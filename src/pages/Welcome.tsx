@@ -10,10 +10,12 @@ export const Welcome: React.FC = () => {
   const [showPasswordLogin, setShowPasswordLogin] = useState(false);
   const [progress, setProgress] = useState(0);
 
-  // 2 Second Splash Auto-Transition to Home
+  // 1.5 Second Splash Auto-Transition to Home (Welcome only, paused/stopped on Login)
   useEffect(() => {
+    if (showPasswordLogin) return; // In login time, no auto-timer
+
     const startTime = Date.now();
-    const duration = 2000; // 2.0 seconds
+    const duration = 1500; // 1.5 seconds
 
     const interval = setInterval(() => {
       const elapsed = Date.now() - startTime;
@@ -22,7 +24,6 @@ export const Welcome: React.FC = () => {
 
       if (elapsed >= duration) {
         clearInterval(interval);
-        // Auto navigate after 2 seconds if user hasn't opened password login modal
         const hasInteracted = localStorage.getItem('user_interacted');
         if (!hasInteracted) {
           localStorage.setItem('userMobile', 'Guest User');
@@ -32,7 +33,7 @@ export const Welcome: React.FC = () => {
     }, 30);
 
     return () => clearInterval(interval);
-  }, [navigate]);
+  }, [navigate, showPasswordLogin]);
 
   const handleEnterApp = (isGuest = false) => {
     localStorage.setItem('user_interacted', 'true');
@@ -47,13 +48,15 @@ export const Welcome: React.FC = () => {
   return (
     <div className="min-h-screen relative overflow-hidden flex flex-col items-center justify-between py-10 px-6 bg-[#2D1B08]">
       
-      {/* 1.5s Auto-Transition Top Progress Bar */}
-      <div className="absolute top-0 left-0 right-0 h-1 bg-white/10 z-30">
-        <div 
-          className="h-full bg-[#C9794D] transition-all duration-75 ease-linear shadow-sm"
-          style={{ width: `${progress}%` }}
-        />
-      </div>
+      {/* 1.5s Auto-Transition Top Progress Bar (Welcome state only) */}
+      {!showPasswordLogin && (
+        <div className="absolute top-0 left-0 right-0 h-1 bg-white/10 z-30">
+          <div 
+            className="h-full bg-[#C9794D] transition-all duration-75 ease-linear shadow-sm"
+            style={{ width: `${progress}%` }}
+          />
+        </div>
+      )}
 
       {/* Full Cover Custom Background Image */}
       <div className="absolute inset-0 z-0 overflow-hidden">
@@ -82,30 +85,12 @@ export const Welcome: React.FC = () => {
           transition={{ delay: 0.2, duration: 0.5 }}
           className="text-white font-black text-3xl tracking-wider uppercase drop-shadow-lg font-serif"
         >
-          Welcome
+          {showPasswordLogin ? 'Sign In' : 'Welcome'}
         </motion.h1>
-        <motion.p 
-          initial={{ y: 15, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.3 }}
-          className="text-amber-100 font-bold text-xs tracking-wide drop-shadow-md mt-1"
-        >
-          Your Perfect Coffee Vibe Awaits
-        </motion.p>
       </div>
 
       {/* Center Spacer */}
-      <div className="relative z-10 flex-1 flex flex-col items-center justify-center my-4">
-        <motion.div
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ delay: 0.3 }}
-          className="bg-black/40 backdrop-blur-md border border-white/20 px-4 py-1.5 rounded-full text-amber-100/90 text-xs font-semibold flex items-center gap-2"
-        >
-          <Sparkles size={14} className="text-[#C9794D]" />
-          <span>Opening Coffee Shop in 2s...</span>
-        </motion.div>
-      </div>
+      <div className="relative z-10 flex-1" />
 
       {/* Action Area & Login Form */}
       <motion.div 

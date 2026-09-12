@@ -78,7 +78,6 @@ export const ProductDetail: React.FC = () => {
       {/* Floating Coffee Showcase Image */}
       <div className="relative z-10 w-full flex justify-center mt-2 h-72">
         <div className="relative w-64 h-64 flex items-center justify-center">
-          <div className="absolute inset-0 rounded-full bg-white/15 border border-white/20 shadow-inner" />
           <motion.img 
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}

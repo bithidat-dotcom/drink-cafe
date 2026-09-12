@@ -33,6 +33,18 @@ export default function App() {
           <Route path="notifications" element={<Notifications />} />
         </Route>
         
+        <Route path="/orders" element={<Layout />}>
+          <Route index element={<Orders />} />
+        </Route>
+
+        <Route path="/favorites" element={<Layout />}>
+          <Route index element={<Favorites />} />
+        </Route>
+
+        <Route path="/profile" element={<Layout />}>
+          <Route index element={<Profile />} />
+        </Route>
+        
         <Route path="/notifications" element={<Layout />}>
           <Route index element={<Notifications />} />
         </Route>
