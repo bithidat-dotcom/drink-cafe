@@ -1,5 +1,5 @@
 import React from 'react';
-import { Heart } from 'lucide-react';
+import { Heart, Plus } from 'lucide-react';
 import { motion } from 'motion/react';
 import { Product } from '../types';
 import { cn } from '../lib/utils';
@@ -12,48 +12,76 @@ interface ProductCardProps {
 
 export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const navigate = useNavigate();
-  const { toggleFavorite, isFavorite } = useAppStore();
+  const { toggleFavorite, isFavorite, addToCart } = useAppStore();
   const favorite = isFavorite(product.id);
 
   return (
     <motion.div
-      whileTap={{ scale: 0.95 }}
+      whileTap={{ scale: 0.96 }}
       onClick={() => navigate(`/product/${product.id}`)}
-      className="bg-[#1C1C1C] rounded-3xl p-3 shadow-sm border border-white/5 flex flex-col gap-3 group relative overflow-hidden"
+      className="bg-white rounded-3xl p-3 shadow-md shadow-amber-900/5 border border-[#EADCC9]/60 flex flex-col gap-2 group relative overflow-hidden transition-all duration-300 hover:shadow-lg hover:border-[#C9794D]/30"
     >
-      <div className="absolute top-0 right-0 w-32 h-32 bg-[#C9794D]/10 rounded-full blur-3xl" />
-      
-      <div className="relative aspect-square rounded-2xl overflow-hidden flex items-center justify-center">
+      {/* Clear Product Showcase Background */}
+      <div className="relative aspect-square rounded-2xl overflow-hidden flex items-center justify-center p-2.5 bg-gradient-to-b from-[#FAF6F0] to-[#F1E8DC]">
+        {/* Crisp Coffee Image */}
         <img 
           src={product.image} 
           alt={product.name} 
-          className="w-[120%] h-[120%] object-cover object-center transition-transform duration-500 group-hover:scale-105 mix-blend-lighten"
-          style={{ maskImage: 'radial-gradient(circle, black 40%, transparent 70%)', WebkitMaskImage: 'radial-gradient(circle, black 40%, transparent 70%)' }}
+          className="w-full h-full object-contain relative z-10 transition-transform duration-500 group-hover:scale-105 drop-shadow-md"
         />
+
+        {/* Favorite Button */}
         <button
           onClick={(e) => {
             e.stopPropagation();
             toggleFavorite(product.id);
           }}
-          className="absolute top-2 right-2 p-1.5"
+          className="absolute top-2 right-2 p-2 bg-white/80 backdrop-blur-md rounded-full z-20 shadow-sm active:scale-90 transition-transform"
         >
           <Heart 
             size={16} 
             className={cn(
               "transition-colors",
-              favorite ? "fill-white text-white" : "text-gray-500"
+              favorite ? "fill-[#C9794D] text-[#C9794D]" : "text-stone-400"
             )} 
           />
         </button>
       </div>
 
-      <div className="px-2 pb-2 flex flex-col gap-1 z-10">
-        <div className="flex items-end justify-between w-full">
-          <span className="font-semibold text-[13px] text-white">{product.name}</span>
-          <div className="flex-1 border-b border-dashed border-gray-600 mx-2 mb-[4px] opacity-30" />
-          <span className="font-bold text-white text-[13px]">${product.price.toFixed(0)}</span>
+      <div className="px-1 pt-1 pb-1 flex flex-col gap-2 z-10">
+        <div className="flex flex-col">
+          <span className="font-bold text-[14px] text-[#2D1B08] line-clamp-1">{product.name}</span>
+          <span className="text-[11px] text-stone-400 line-clamp-1">Rich cold espresso</span>
+        </div>
+
+        <div className="flex items-center justify-between w-full mt-1">
+          <span className="font-extrabold text-[#C9794D] text-[16px]">${product.price.toFixed(2)}</span>
+
+          {/* Add to Cart Button matching Home button style */}
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              addToCart(
+                product,
+                {
+                  id: Math.random().toString(36).substr(2, 9),
+                  productId: product.id,
+                  size: 'Medium',
+                  temperature: 'Cold',
+                  milk: 'Regular',
+                  sugar: 'Normal',
+                  extras: []
+                },
+                1
+              );
+            }}
+            className="w-9 h-9 rounded-full bg-[#C9794D] text-white flex items-center justify-center shadow-md shadow-[#C9794D]/30 active:scale-90 transition-transform ripple-button"
+          >
+            <Plus size={18} strokeWidth={2.5} />
+          </button>
         </div>
       </div>
     </motion.div>
   );
 };
+

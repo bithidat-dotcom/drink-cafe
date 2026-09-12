@@ -10,7 +10,7 @@
   }
   
   .glass {
-    @apply bg-[#1C1C1C]/70 backdrop-blur-xl border border-white/5 shadow-2xl;
+    @apply bg-white/80 backdrop-blur-xl border border-black/5 shadow-xl;
   }
 
   .ripple-button {
@@ -24,7 +24,7 @@
     left: 50%;
     width: 250%;
     padding-top: 250%;
-    background: radial-gradient(circle, rgba(255,255,255,0.4) 10%, transparent 20%);
+    background: radial-gradient(circle, rgba(201,121,77,0.3) 10%, transparent 20%);
     background-position: 50%;
     transform: translate(-50%, -50%) scale(0);
     opacity: 0;
@@ -39,5 +39,6 @@
 }
 
 body {
-  @apply bg-[#151515] text-white overflow-x-hidden;
+  @apply bg-[#FDFBF7] text-[#2D1B08] overflow-x-hidden;
 }
+

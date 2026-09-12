@@ -22,7 +22,7 @@ export const useAppStore = create<AppState>()(
     (set, get) => ({
       user: null,
       cart: [],
-      favorites: [],
+      favorites: ['1', '2', '4', '6'],
       
       setUser: (user) => set({ user }),
       

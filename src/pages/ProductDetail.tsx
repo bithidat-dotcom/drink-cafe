@@ -14,7 +14,6 @@ export const ProductDetail: React.FC = () => {
   const { addToCart, toggleFavorite, isFavorite } = useAppStore();
 
   const [size, setSize] = useState<ProductSize>('Medium');
-  const [customizations, setCustomizations] = useState<string[]>(['Extra Milk']);
   const [addOns, setAddOns] = useState<string[]>([]);
   const [quantity, setQuantity] = useState(1);
 
@@ -35,10 +34,10 @@ export const ProductDetail: React.FC = () => {
       id: Math.random().toString(36).substr(2, 9),
       productId: product.id,
       size,
-      temperature: 'Hot',
+      temperature: 'Cold',
       milk: 'Regular',
       sugar: 'Normal',
-      extras: [...customizations, ...addOns]
+      extras: [...addOns]
     };
     addToCart(product, customization, quantity);
     navigate('/cart');
@@ -49,138 +48,151 @@ export const ProductDetail: React.FC = () => {
   };
 
   const cupSizes = [
-    { id: 'Small', label: 'Small', iconScale: 0.7 },
-    { id: 'Medium', label: 'Medium', iconScale: 0.85 },
-    { id: 'Large', label: 'Large', iconScale: 1 },
+    { id: 'Small', label: 'Small', iconScale: 0.75 },
+    { id: 'Medium', label: 'Medium', iconScale: 0.9 },
+    { id: 'Large', label: 'Large', iconScale: 1.05 },
   ];
 
   return (
-    <div className="min-h-screen bg-[#151515] pb-32 text-white relative">
-      {/* Curved Orange Header */}
-      <div className="absolute top-0 left-0 w-full h-[45%] bg-[#C9794D] rounded-b-[60px] z-0" />
+    <div className="min-h-screen bg-[#FDFBF7] pb-32 text-[#2D1B08] relative">
+      {/* Curved Header Showcase */}
+      <div className="absolute top-0 left-0 w-full h-[360px] bg-gradient-to-b from-[#C9794D] to-[#A85E36] rounded-b-[50px] z-0 overflow-hidden shadow-lg shadow-amber-900/10" />
 
-      {/* Header Actions */}
-      <div className="relative z-20 pt-8 px-6 flex items-center justify-between">
-        <button onClick={() => navigate(-1)} className="p-2 -ml-2 text-white">
-          <ArrowLeft size={24} />
+      {/* Header Navigation */}
+      <div className="relative z-20 pt-6 px-6 flex items-center justify-between">
+        <button onClick={() => navigate(-1)} className="p-2.5 bg-white/20 backdrop-blur-md rounded-full text-white active:scale-95 transition-transform">
+          <ArrowLeft size={22} />
         </button>
-        <button onClick={() => toggleFavorite(product.id)} className="p-2 -mr-2 text-white">
-          <Heart size={24} className={cn(favorite && "fill-white")} />
+        <button onClick={() => toggleFavorite(product.id)} className="p-2.5 bg-white/20 backdrop-blur-md rounded-full text-white active:scale-95 transition-transform">
+          <Heart size={22} className={cn(favorite && "fill-white text-white")} />
         </button>
       </div>
 
-      {/* Product Image */}
-      <div className="relative z-10 w-full flex justify-center mt-4 h-64">
-        <motion.img 
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          src={product.image} 
-          alt={product.name} 
-          className="h-[120%] object-cover object-bottom mix-blend-multiply drop-shadow-2xl"
-          style={{ maskImage: 'radial-gradient(ellipse at bottom, black 40%, transparent 70%)', WebkitMaskImage: 'radial-gradient(ellipse at bottom, black 40%, transparent 70%)' }}
-        />
-        <div className="absolute inset-0 flex items-center justify-center opacity-30 pointer-events-none">
-           <h1 className="text-8xl font-black text-white mix-blend-overlay tracking-tighter w-full text-center truncate px-4">{product.name}</h1>
+      {/* Floating Coffee Showcase Image */}
+      <div className="relative z-10 w-full flex justify-center mt-2 h-72">
+        <div className="relative w-64 h-64 flex items-center justify-center">
+          <div className="absolute inset-0 rounded-full bg-white/15 border border-white/20 shadow-inner" />
+          <motion.img 
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            src={product.image} 
+            alt={product.name} 
+            className="w-full h-full object-contain relative z-10 drop-shadow-2xl"
+          />
         </div>
       </div>
 
-      {/* Content */}
-      <div className="relative z-20 px-6 pt-16 flex flex-col gap-6">
+      {/* Product Content Details */}
+      <div className="relative z-20 px-6 pt-6 flex flex-col gap-6">
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold">{product.name}</h1>
-          <div className="flex items-center gap-1 text-sm">
+          <h1 className="text-2xl font-black text-[#2D1B08]">{product.name}</h1>
+          <div className="flex items-center gap-1.5 text-sm bg-amber-100/80 px-3.5 py-1.5 rounded-full text-[#2D1B08] shadow-xs">
             <Star size={16} className="fill-[#C9794D] text-[#C9794D]" />
-            <span className="font-bold">{product.rating}</span>
-            <span className="text-gray-500">({product.reviewCount}+ Reviews)</span>
+            <span className="font-extrabold">{product.rating}</span>
           </div>
         </div>
 
-        {/* Customizations */}
-        <div>
-          <h3 className="text-sm font-semibold mb-3">Customizations:</h3>
-          <div className="flex flex-wrap gap-4">
-            {['Extra Milk', 'Less Sugar', 'Add Flavor'].map(item => (
-              <label key={item} className="flex items-center gap-2 cursor-pointer text-xs text-gray-300">
-                <div className={cn(
-                  "w-4 h-4 rounded border flex items-center justify-center transition-colors",
-                  customizations.includes(item) ? "bg-[#C9794D] border-[#C9794D]" : "border-gray-500"
-                )}>
-                  {customizations.includes(item) && <div className="w-2 h-2 bg-white rounded-sm" />}
-                </div>
-                {item}
-              </label>
-            ))}
-          </div>
-        </div>
+        <p className="text-sm text-stone-600 leading-relaxed font-medium">
+          {product.description}
+        </p>
 
-        {/* Add-Ons */}
-        <div className="flex justify-between items-start">
+        {/* Add-Ons and Quantity */}
+        <div className="flex justify-between items-start mt-1">
           <div className="flex-1">
-            <h3 className="text-sm font-semibold mb-3">Add-Ons:</h3>
-            <div className="flex flex-wrap gap-4">
-              {['Extra Shot', 'Whipped Cream'].map(item => (
-                <label key={item} className="flex items-center gap-2 cursor-pointer text-xs text-gray-300">
+            <h3 className="text-sm font-bold text-[#2D1B08] mb-3">Custom Add-Ons:</h3>
+            <div className="flex flex-wrap gap-3">
+              {['Extra Shot', 'Whipped Cream', 'Vanilla Syrup'].map(item => (
+                <button
+                  key={item}
+                  onClick={() => toggleSelection(item, addOns, setAddOns)}
+                  className={cn(
+                    "px-3.5 py-1.5 rounded-full text-xs font-semibold border transition-all duration-200 flex items-center gap-2",
+                    addOns.includes(item) 
+                      ? "bg-[#C9794D] border-[#C9794D] text-white shadow-sm" 
+                      : "bg-white border-[#EADCC9] text-stone-600 hover:border-[#C9794D]/50"
+                  )}
+                >
                   <div className={cn(
-                    "w-4 h-4 rounded border flex items-center justify-center transition-colors",
-                    addOns.includes(item) ? "bg-[#C9794D] border-[#C9794D]" : "border-gray-500"
+                    "w-3.5 h-3.5 rounded-full border flex items-center justify-center",
+                    addOns.includes(item) ? "border-white bg-white" : "border-stone-400"
                   )}>
-                    {addOns.includes(item) && <div className="w-2 h-2 bg-white rounded-sm" />}
+                    {addOns.includes(item) && <div className="w-1.5 h-1.5 bg-[#C9794D] rounded-full" />}
                   </div>
-                  {item}
-                </label>
+                  <span>{item}</span>
+                </button>
               ))}
             </div>
           </div>
           
-          {/* Quantity */}
-          <div className="flex flex-col items-center gap-2 bg-[#1C1C1C] rounded-full p-1 border border-white/5">
-            <button onClick={() => setQuantity(q => Math.max(1, q - 1))} className="w-6 h-6 rounded-full bg-[#C9794D]/20 text-[#C9794D] flex items-center justify-center font-bold text-lg">-</button>
-            <span className="font-bold text-sm">{quantity}</span>
-            <button onClick={() => setQuantity(q => q + 1)} className="w-6 h-6 rounded-full bg-[#C9794D] text-white flex items-center justify-center font-bold text-lg">+</button>
+          {/* Quantity Selector */}
+          <div className="flex flex-col items-center gap-2 bg-white rounded-full p-1.5 border border-[#EADCC9] shadow-sm ml-2">
+            <button onClick={() => setQuantity(q => Math.max(1, q - 1))} className="w-7 h-7 rounded-full bg-amber-100/70 text-[#C9794D] flex items-center justify-center font-bold text-base active:scale-90 transition-transform">-</button>
+            <span className="font-bold text-sm text-[#2D1B08]">{quantity}</span>
+            <button onClick={() => setQuantity(q => q + 1)} className="w-7 h-7 rounded-full bg-[#C9794D] text-white flex items-center justify-center font-bold text-base shadow-sm active:scale-90 transition-transform">+</button>
           </div>
         </div>
 
-        {/* Size */}
-        <div>
-          <h3 className="text-sm font-semibold mb-3">Size</h3>
-          <div className="flex justify-between items-end px-4">
-            {cupSizes.map(s => (
-              <button 
-                key={s.id} 
-                onClick={() => setSize(s.id as ProductSize)}
-                className="flex flex-col items-center gap-2 group"
-              >
-                <div 
-                  className={cn("transition-colors", size === s.id ? "text-[#C9794D]" : "text-gray-600")}
-                  style={{ transform: `scale(${s.iconScale})` }}
+        {/* Size Selection */}
+        <div className="mt-1">
+          <h3 className="text-sm font-bold text-[#2D1B08] mb-3">Select Size:</h3>
+          <div className="flex justify-around items-center bg-white p-3 rounded-2xl border border-[#EADCC9]/80 shadow-xs">
+            {cupSizes.map(s => {
+              const isSelected = size === s.id;
+              return (
+                <button 
+                  key={s.id} 
+                  onClick={() => setSize(s.id as ProductSize)}
+                  className={cn(
+                    "flex flex-col items-center gap-2 p-3 rounded-xl transition-all duration-200 min-w-[85px]",
+                    isSelected 
+                      ? "bg-amber-50 border-2 border-[#C9794D] shadow-sm scale-105" 
+                      : "bg-transparent border border-transparent hover:bg-stone-50"
+                  )}
                 >
-                  <svg width="24" height="32" viewBox="0 0 24 32" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M2 0H22L19 26C18.8 29.3 16 32 12 32C8 32 5.2 29.3 5 26L2 0Z" />
-                  </svg>
-                </div>
-                <span className={cn("text-xs font-semibold transition-colors", size === s.id ? "text-[#C9794D]" : "text-gray-500")}>
-                  {s.label}
-                </span>
-              </button>
-            ))}
+                  <div 
+                    className={cn(
+                      "w-10 h-10 rounded-full flex items-center justify-center transition-all shadow-xs",
+                      isSelected ? "bg-[#C9794D] text-white" : "bg-stone-100 text-stone-400"
+                    )}
+                  >
+                    <svg 
+                      width="20" 
+                      height="26" 
+                      viewBox="0 0 24 32" 
+                      fill="currentColor" 
+                      xmlns="http://www.w3.org/2000/svg"
+                      style={{ transform: `scale(${s.iconScale})` }}
+                    >
+                      <path d="M2 0H22L19 26C18.8 29.3 16 32 12 32C8 32 5.2 29.3 5 26L2 0Z" />
+                    </svg>
+                  </div>
+                  <span className={cn("text-xs font-bold transition-colors", isSelected ? "text-[#C9794D]" : "text-stone-500")}>
+                    {s.label}
+                  </span>
+                </button>
+              );
+            })}
           </div>
         </div>
       </div>
 
-      {/* Bottom Sticky Action */}
-      <div className="fixed bottom-0 left-0 right-0 p-6 bg-[#151515] pb-safe-area-inset-bottom flex items-center justify-between z-30">
-        <div className="flex items-end gap-1">
-          <span className="text-3xl font-bold">${Math.floor(calculatePrice())}</span>
-          <span className="text-sm text-gray-500 mb-1 line-through">${(calculatePrice() + 0.5).toFixed(2)}</span>
+      {/* Bottom Sticky Add to Cart Action */}
+      <div className="fixed bottom-0 left-0 right-0 p-5 bg-white/95 backdrop-blur-xl border-t border-[#EADCC9]/80 pb-safe-area-inset-bottom flex items-center justify-between z-30 shadow-2xl">
+        <div className="flex flex-col">
+          <span className="text-stone-400 text-[10px] font-bold uppercase tracking-wider mb-0.5">Total Price</span>
+          <div className="flex items-end gap-1.5">
+            <span className="text-3xl font-black text-[#C9794D]">${calculatePrice().toFixed(2)}</span>
+          </div>
         </div>
         <button
           onClick={handleAddToCart}
-          className="w-1/2 bg-[#C9794D] text-white py-4 rounded-3xl font-bold flex items-center justify-center gap-2 shadow-xl shadow-[#C9794D]/20 active:scale-[0.98] transition-transform ripple-button"
+          className="flex-1 ml-6 bg-gradient-to-r from-[#C9794D] to-[#E09065] text-white py-3.5 px-6 rounded-full font-bold flex items-center justify-center gap-3 shadow-xl shadow-[#C9794D]/30 active:scale-[0.98] transition-all ripple-button"
         >
-          <ShoppingCart size={18} />
-          Add to Cart
+          <ShoppingCart size={20} className="drop-shadow-md" />
+          <span className="tracking-wide text-sm font-bold">Add to Cart</span>
         </button>
       </div>
     </div>
   );
 };
+

@@ -16,24 +16,25 @@ import { Loyalty } from './pages/Loyalty';
 import { AdminDashboard } from './pages/admin/Dashboard';
 import { AdminLogin } from './pages/admin/AdminLogin';
 
-import { AuthProvider } from './lib/auth';
-
 import { Welcome } from './pages/Welcome';
 
 export default function App() {
   return (
-    <AuthProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Welcome />} />
-          <Route path="/home" element={<Layout />}>
-            <Route index element={<Home />} />
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Welcome />} />
+        <Route path="/home" element={<Layout />}>
+          <Route index element={<Home />} />
           <Route path="menu" element={<Menu />} />
           <Route path="favorites" element={<Favorites />} />
           <Route path="profile" element={<Profile />} />
           <Route path="orders" element={<Orders />} />
           <Route path="loyalty" element={<Loyalty />} />
           <Route path="notifications" element={<Notifications />} />
+        </Route>
+        
+        <Route path="/notifications" element={<Layout />}>
+          <Route index element={<Notifications />} />
         </Route>
         
         <Route path="/product/:id" element={<ProductDetail />} />
@@ -46,6 +47,5 @@ export default function App() {
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
       </Routes>
     </BrowserRouter>
-    </AuthProvider>
   );
 }

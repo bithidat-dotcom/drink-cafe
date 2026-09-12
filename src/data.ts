@@ -1,35 +1,89 @@
 import { Category, Product, Banner, Offer } from './types';
 
 export const CATEGORIES: Category[] = [
-  { id: 'hot-coffee', name: 'Hot Coffee', icon: 'Coffee' },
-  { id: 'iced-coffee', name: 'Iced Coffee', icon: 'CupSoda' },
-  { id: 'frappuccino', name: 'Frappuccino', icon: 'Leaf' },
-  { id: 'mocha', name: 'Mocha', icon: 'Cookie' },
+  { id: 'coffee', name: 'Coffee', icon: 'Coffee' },
+  { id: 'tea', name: 'Tea', icon: 'Leaf' },
+  { id: 'milkshake', name: 'Milkshake', icon: 'Milk' },
 ];
 
 export const PRODUCTS: Product[] = [
   {
     id: '1',
-    categoryId: 'iced-coffee',
-    name: 'Espresso',
-    description: 'Rich, intense, and perfectly extracted espresso shot.',
-    price: 3.00,
-    image: 'https://images.unsplash.com/photo-1599557431284-0a307c9fb377?q=80&w=600&auto=format&fit=crop',
+    categoryId: 'coffee',
+    name: 'Special Cold Coffee',
+    description: 'Signature cold brewed espresso with creamy froth and dark chocolate syrup.',
+    price: 4.50,
+    image: 'https://i.postimg.cc/52Fv0yC1/f7f7f32e-6709-496f-a1e2-173e733bbcad.png',
     rating: 4.9,
-    reviewCount: 200,
+    reviewCount: 320,
     isPopular: true,
   },
   {
     id: '2',
-    categoryId: 'hot-coffee',
-    name: 'Vanilla Latte',
-    description: 'Smooth espresso with steamed milk and vanilla syrup.',
-    price: 2.00,
-    image: 'https://images.unsplash.com/photo-1551024601-bec78aea704b?q=80&w=600&auto=format&fit=crop',
-    rating: 4.7,
-    reviewCount: 156,
+    categoryId: 'coffee',
+    name: 'Iced Mocha Frappe',
+    description: 'Chilled rich mocha blended with milk ice and chocolate drizzle.',
+    price: 5.00,
+    image: 'https://i.postimg.cc/PJPJRVW7/cb767773-eaec-4ae5-a2ce-d7eedee66b24.png',
+    rating: 4.8,
+    reviewCount: 245,
     isPopular: true,
   },
+  {
+    id: '3',
+    categoryId: 'coffee',
+    name: 'Caramel Cream Latte',
+    description: 'Smooth double espresso layered with creamy vanilla and golden caramel.',
+    price: 4.75,
+    image: 'https://i.postimg.cc/XNmYv8cS/e124248e-d5d7-4e04-b98d-eb76d615c0ed.png',
+    rating: 4.9,
+    reviewCount: 410,
+    isPopular: true,
+  },
+  {
+    id: '4',
+    categoryId: 'tea',
+    name: 'Iced Matcha Tea Latte',
+    description: 'Premium ceremonial Japanese matcha whisked with chilled oat milk and honey.',
+    price: 4.75,
+    image: 'https://i.postimg.cc/J4VpmfgC/45d8619a-f852-456d-ad2c-40d51788622e.png',
+    rating: 4.8,
+    reviewCount: 198,
+    isPopular: true,
+  },
+  {
+    id: '5',
+    categoryId: 'tea',
+    name: 'Peach Citrus Iced Tea',
+    description: 'Refreshing black tea infused with real peach nectar and fresh mint leaves.',
+    price: 4.25,
+    image: 'https://i.postimg.cc/XNmYv8cS/e124248e-d5d7-4e04-b98d-eb76d615c0ed.png',
+    rating: 4.7,
+    reviewCount: 175,
+    isPopular: false,
+  },
+  {
+    id: '6',
+    categoryId: 'milkshake',
+    name: 'Velvet Chocolate Shake',
+    description: 'Rich Belgian chocolate ice cream blended with thick milk and topped with whipped cream.',
+    price: 5.25,
+    image: 'https://i.postimg.cc/PJPJRVW7/cb767773-eaec-4ae5-a2ce-d7eedee66b24.png',
+    rating: 4.9,
+    reviewCount: 290,
+    isPopular: true,
+  },
+  {
+    id: '7',
+    categoryId: 'milkshake',
+    name: 'Strawberry Milkshake',
+    description: 'Creamy fresh strawberry ice cream shake crowned with berries and vanilla glaze.',
+    price: 5.00,
+    image: 'https://i.postimg.cc/52Fv0yC1/f7f7f32e-6709-496f-a1e2-173e733bbcad.png',
+    rating: 4.9,
+    reviewCount: 310,
+    isPopular: false,
+  }
 ];
 
 export const BANNERS: Banner[] = [
@@ -49,13 +103,5 @@ export const OFFERS: Offer[] = [
     image: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&q=80&w=400',
     discount: 20,
     code: 'MORNING20'
-  },
-  {
-    id: '2',
-    title: 'Buy 1 Get 1',
-    description: 'Buy any large latte and get a regular americano free!',
-    image: 'https://images.unsplash.com/photo-1541167760496-1628856ab772?auto=format&fit=crop&q=80&w=400',
-    discount: 50,
-    code: 'BOGO'
   }
 ];
