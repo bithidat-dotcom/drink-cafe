@@ -41,13 +41,7 @@ export const Favorites: React.FC = () => {
   }, [filteredCollection.length, currentIndex]);
 
   const activeProduct: Product | undefined = filteredCollection[currentIndex];
-
   const length = filteredCollection.length;
-  const prevIndex = (currentIndex - 1 + length) % length;
-  const nextIndex = (currentIndex + 1) % length;
-
-  const prevItem = filteredCollection[prevIndex];
-  const nextItem = filteredCollection[nextIndex];
 
   const slideLeft = () => {
     if (length <= 1) return;
@@ -124,21 +118,21 @@ export const Favorites: React.FC = () => {
 
   const slideVariants = {
     enter: (dir: number) => ({
-      x: dir > 0 ? 180 : -180,
+      x: dir > 0 ? 280 : -280,
       opacity: 0,
-      scale: 0.8,
+      scale: 0.85,
     }),
     center: {
       x: 0,
       opacity: 1,
       scale: 1,
-      transition: { duration: 0.35, ease: [0.22, 1, 0.36, 1] }
+      transition: { duration: 0.35, ease: [0.25, 1, 0.5, 1] }
     },
     exit: (dir: number) => ({
-      x: dir < 0 ? 180 : -180,
+      x: dir < 0 ? 280 : -280,
       opacity: 0,
-      scale: 0.8,
-      transition: { duration: 0.25 }
+      scale: 0.85,
+      transition: { duration: 0.35, ease: [0.25, 1, 0.5, 1] }
     })
   };
 
@@ -193,7 +187,7 @@ export const Favorites: React.FC = () => {
       {filteredCollection.length > 0 && activeProduct ? (
         <div className="flex flex-col gap-4 mt-1">
           
-          {/* Smooth 3D Carousel Stage with Side Blurred Coffees */}
+          {/* Smooth Carousel Stage with Clean Floating Coffee */}
           <div className="relative w-full h-[260px] flex items-center justify-center overflow-hidden my-1 select-none">
             
             {/* Left Slide Arrow */}
@@ -212,24 +206,8 @@ export const Favorites: React.FC = () => {
               <ChevronRight size={20} />
             </button>
 
-            {/* Side Coffee LEFT (Blurred Preview) */}
-            {length > 1 && prevItem && (
-              <motion.div
-                key={`prev-${prevItem.id}`}
-                onClick={slideLeft}
-                className="absolute left-[-5%] sm:left-[5%] z-10 cursor-pointer flex flex-col items-center opacity-40 blur-[3px] scale-75 transition-all duration-300 hover:opacity-60"
-              >
-                <div className="w-36 h-36 relative flex items-center justify-center">
-                  <img src={prevItem.image} alt={prevItem.name} className="h-full object-contain drop-shadow-md" />
-                </div>
-                <span className="text-[10px] font-extrabold text-[#2D1B08] max-w-[90px] truncate text-center mt-1">
-                  {prevItem.name}
-                </span>
-              </motion.div>
-            )}
-
-            {/* Center Coffee (Active - Floating without Card Container) */}
-            <AnimatePresence custom={direction} mode="wait">
+            {/* Animated Swipable Coffee Image (No Blur, Sharp & Clear Slide) */}
+            <AnimatePresence custom={direction} mode="popLayout">
               <motion.div
                 key={`active-${activeProduct.id}`}
                 custom={direction}
@@ -244,9 +222,8 @@ export const Favorites: React.FC = () => {
                 onClick={() => navigate(`/product/${activeProduct.id}`)}
                 className="relative z-20 flex flex-col items-center justify-center cursor-pointer group"
               >
-                {/* Floating Drink with soft ambient glow */}
+                {/* Floating Drink */}
                 <div className="relative w-52 h-52 flex items-center justify-center">
-                  <div className="absolute inset-4 rounded-full bg-amber-200/30 filter blur-2xl scale-110 -z-10" />
                   <motion.img
                     src={activeProduct.image}
                     alt={activeProduct.name}
@@ -257,22 +234,6 @@ export const Favorites: React.FC = () => {
                 </div>
               </motion.div>
             </AnimatePresence>
-
-            {/* Side Coffee RIGHT (Blurred Preview) */}
-            {length > 1 && nextItem && (
-              <motion.div
-                key={`next-${nextItem.id}`}
-                onClick={slideRight}
-                className="absolute right-[-5%] sm:right-[5%] z-10 cursor-pointer flex flex-col items-center opacity-40 blur-[3px] scale-75 transition-all duration-300 hover:opacity-60"
-              >
-                <div className="w-36 h-36 relative flex items-center justify-center">
-                  <img src={nextItem.image} alt={nextItem.name} className="h-full object-contain drop-shadow-md" />
-                </div>
-                <span className="text-[10px] font-extrabold text-[#2D1B08] max-w-[90px] truncate text-center mt-1">
-                  {nextItem.name}
-                </span>
-              </motion.div>
-            )}
           </div>
 
           {/* Indicator Dots */}

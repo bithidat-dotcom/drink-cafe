@@ -55,8 +55,15 @@ export const ProductDetail: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#FDFBF7] pb-32 text-[#2D1B08] relative">
-      {/* Curved Header Showcase */}
-      <div className="absolute top-0 left-0 w-full h-[360px] bg-gradient-to-b from-[#C9794D] to-[#A85E36] rounded-b-[50px] z-0 overflow-hidden shadow-lg shadow-amber-900/10" />
+      {/* Curved Header Showcase with Product Custom Background Image */}
+      <div className="absolute top-0 left-0 w-full h-[380px] rounded-b-[50px] z-0 overflow-hidden shadow-lg shadow-amber-900/20">
+        <img 
+          src="https://i.pinimg.com/736x/ac/34/bb/ac34bb50738ceb1fd87bea36f1141bf3.jpg" 
+          alt="Product showcase background" 
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#2D1B08]/60 via-[#C9794D]/40 to-[#2D1B08]/80" />
+      </div>
 
       {/* Header Navigation */}
       <div className="relative z-20 pt-6 px-6 flex items-center justify-between">

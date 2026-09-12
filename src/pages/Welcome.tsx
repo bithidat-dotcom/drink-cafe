@@ -10,10 +10,10 @@ export const Welcome: React.FC = () => {
   const [showPasswordLogin, setShowPasswordLogin] = useState(false);
   const [progress, setProgress] = useState(0);
 
-  // 1.5 Second Splash Auto-Transition to Home
+  // 2 Second Splash Auto-Transition to Home
   useEffect(() => {
     const startTime = Date.now();
-    const duration = 1500; // 1.5 seconds
+    const duration = 2000; // 2.0 seconds
 
     const interval = setInterval(() => {
       const elapsed = Date.now() - startTime;
@@ -22,7 +22,7 @@ export const Welcome: React.FC = () => {
 
       if (elapsed >= duration) {
         clearInterval(interval);
-        // Auto navigate after 1.5 seconds if user hasn't opened password login modal
+        // Auto navigate after 2 seconds if user hasn't opened password login modal
         const hasInteracted = localStorage.getItem('user_interacted');
         if (!hasInteracted) {
           localStorage.setItem('userMobile', 'Guest User');
@@ -58,8 +58,8 @@ export const Welcome: React.FC = () => {
       {/* Full Cover Custom Background Image */}
       <div className="absolute inset-0 z-0 overflow-hidden">
         <img 
-          src="https://i.pinimg.com/736x/48/49/28/484928a46f4c79dc19c2e815a7aab29a.jpg" 
-          alt="Coffee Vibe background" 
+          src="https://i.pinimg.com/736x/23/6d/92/236d929ea7c5070666f3fc4902cb0e3b.jpg" 
+          alt="Coffee Welcome Background" 
           className="w-full h-full object-cover opacity-90 scale-105"
         />
         {/* Dark Warm Gradient Overlay for readability */}
@@ -76,11 +76,19 @@ export const Welcome: React.FC = () => {
           alt="Coffee Vibe Logo" 
           className="h-20 mb-2 drop-shadow-2xl"
         />
+        <motion.h1 
+          initial={{ scale: 0.85, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ delay: 0.2, duration: 0.5 }}
+          className="text-white font-black text-3xl tracking-wider uppercase drop-shadow-lg font-serif"
+        >
+          Welcome
+        </motion.h1>
         <motion.p 
           initial={{ y: 15, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.2 }}
-          className="text-amber-100 font-bold text-sm tracking-wide drop-shadow-md"
+          transition={{ delay: 0.3 }}
+          className="text-amber-100 font-bold text-xs tracking-wide drop-shadow-md mt-1"
         >
           Your Perfect Coffee Vibe Awaits
         </motion.p>
@@ -92,10 +100,10 @@ export const Welcome: React.FC = () => {
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ delay: 0.3 }}
-          className="bg-black/30 backdrop-blur-md border border-white/20 px-4 py-1.5 rounded-full text-amber-100/90 text-xs font-semibold flex items-center gap-2"
+          className="bg-black/40 backdrop-blur-md border border-white/20 px-4 py-1.5 rounded-full text-amber-100/90 text-xs font-semibold flex items-center gap-2"
         >
           <Sparkles size={14} className="text-[#C9794D]" />
-          <span>Auto-opening in 1.5s...</span>
+          <span>Opening Coffee Shop in 2s...</span>
         </motion.div>
       </div>
 
