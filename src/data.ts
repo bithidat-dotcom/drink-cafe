@@ -83,6 +83,28 @@ export const PRODUCTS: Product[] = [
     rating: 4.9,
     reviewCount: 310,
     isPopular: false,
+  },
+  {
+    id: '8',
+    categoryId: 'coffee',
+    name: 'Royal Gold Espresso',
+    description: 'A premium blend of golden roasted beans with a smooth, velvety finish.',
+    price: 5.50,
+    image: 'https://i.postimg.cc/pTrryV0G/file-00000000721881fab5e8cf9e5d52050d.png',
+    rating: 5.0,
+    reviewCount: 156,
+    isPopular: true,
+  },
+  {
+    id: '9',
+    categoryId: 'coffee',
+    name: 'Cloud Cream Latte',
+    description: 'Ultra-creamy latte topped with a light, airy milk cloud.',
+    price: 5.25,
+    image: 'https://i.postimg.cc/sXxx1fnq/file-000000006abc81fa8c110f9500a457ae.png',
+    rating: 4.9,
+    reviewCount: 88,
+    isPopular: true,
   }
 ];
 

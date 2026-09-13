@@ -2,9 +2,17 @@ import React, { useEffect } from 'react';
 import { motion } from 'motion/react';
 import { CheckCircle2, Coffee, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useAppStore } from '../store/useAppStore';
 
 export const OrderConfirmation: React.FC = () => {
   const navigate = useNavigate();
+  const { user } = useAppStore();
+
+  useEffect(() => {
+    if (!user) {
+      navigate('/');
+    }
+  }, [user, navigate]);
 
   return (
     <div className="min-h-screen bg-white flex flex-col items-center justify-center px-6 text-center">

@@ -6,7 +6,13 @@ import { useAppStore } from '../store/useAppStore';
 
 export const Cart: React.FC = () => {
   const navigate = useNavigate();
-  const { cart, removeFromCart, updateCartQuantity } = useAppStore();
+  const { cart, removeFromCart, updateCartQuantity, user } = useAppStore();
+
+  React.useEffect(() => {
+    if (!user) {
+      navigate('/');
+    }
+  }, [user, navigate]);
 
   const subtotal = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
   const deliveryFee = subtotal > 0 ? 2.50 : 0;

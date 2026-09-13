@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import { CATEGORIES, PRODUCTS } from '../data';
 import { ProductCard } from '../components/ProductCard';
-import { Search, Mic, SlidersHorizontal, Plus } from 'lucide-react';
+import { Search, Mic, SlidersHorizontal, Plus, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAppStore } from '../store/useAppStore';
 
@@ -11,6 +11,18 @@ export const Home: React.FC = () => {
   const { addToCart } = useAppStore();
   const [selectedCategory, setSelectedCategory] = useState<string>('coffee');
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const [isSearching, setIsSearching] = useState(false);
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSearchQuery(value);
+    if (value.length > 0) {
+      setIsSearching(true);
+      setTimeout(() => setIsSearching(false), 600);
+    } else {
+      setIsSearching(false);
+    }
+  };
 
   const categoryProducts = PRODUCTS.filter(p => {
     const matchesCat = selectedCategory === 'all' || p.categoryId === selectedCategory;
@@ -53,12 +65,16 @@ export const Home: React.FC = () => {
       {/* Search Bar */}
       <div className="flex gap-3 items-center">
         <div className="flex-1 bg-white rounded-[20px] flex items-center px-4 py-3 shadow-md shadow-stone-200/40 border border-[#EADCC9]/80">
-          <Search size={18} className="text-stone-400 shrink-0" />
+          {isSearching ? (
+            <Loader2 size={18} className="text-[#C9794D] animate-spin shrink-0" />
+          ) : (
+            <Search size={18} className="text-stone-400 shrink-0" />
+          )}
           <input 
             type="text" 
             placeholder="Search coffee, tea, milkshake..."
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={handleSearch}
             className="bg-transparent border-none focus:outline-none text-sm px-3 w-full text-[#2D1B08] placeholder-stone-400 font-medium"
           />
           <Mic size={18} className="text-stone-400 shrink-0" />

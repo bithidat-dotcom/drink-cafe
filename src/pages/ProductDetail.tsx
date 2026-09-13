@@ -11,7 +11,13 @@ export const ProductDetail: React.FC = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const product = PRODUCTS.find(p => p.id === id);
-  const { addToCart, toggleFavorite, isFavorite } = useAppStore();
+  const { addToCart, toggleFavorite, isFavorite, user } = useAppStore();
+
+  React.useEffect(() => {
+    if (!user) {
+      navigate('/');
+    }
+  }, [user, navigate]);
 
   const [size, setSize] = useState<ProductSize>('Medium');
   const [addOns, setAddOns] = useState<string[]>([]);
@@ -184,20 +190,20 @@ export const ProductDetail: React.FC = () => {
 
       {/* Bottom Sticky Add to Cart Action */}
       <div className="fixed bottom-0 left-0 right-0 p-5 bg-white/95 backdrop-blur-xl border-t border-[#EADCC9]/80 pb-safe-area-inset-bottom flex items-center justify-between z-30 shadow-2xl">
-        <div className="flex flex-col">
-          <span className="text-stone-400 text-[10px] font-bold uppercase tracking-wider mb-0.5">Total Price</span>
-          <div className="flex items-end gap-1.5">
-            <span className="text-3xl font-black text-[#C9794D]">${calculatePrice().toFixed(2)}</span>
+          <div className="flex flex-col">
+            <span className="text-stone-400 text-[10px] font-bold uppercase tracking-wider mb-0.5">Total Price</span>
+            <div className="flex items-end gap-1.5">
+              <span className="text-3xl font-black text-[#C9794D]">${calculatePrice().toFixed(2)}</span>
+            </div>
           </div>
+          <button
+            onClick={handleAddToCart}
+            className="flex-1 ml-6 bg-gradient-to-r from-[#C9794D] to-[#E09065] text-white py-3.5 px-6 rounded-full font-bold flex items-center justify-center gap-3 shadow-xl shadow-[#C9794D]/30 active:scale-[0.98] transition-all ripple-button"
+          >
+            <ShoppingCart size={20} className="drop-shadow-md" />
+            <span className="tracking-wide text-sm font-bold">Add to Cart</span>
+          </button>
         </div>
-        <button
-          onClick={handleAddToCart}
-          className="flex-1 ml-6 bg-gradient-to-r from-[#C9794D] to-[#E09065] text-white py-3.5 px-6 rounded-full font-bold flex items-center justify-center gap-3 shadow-xl shadow-[#C9794D]/30 active:scale-[0.98] transition-all ripple-button"
-        >
-          <ShoppingCart size={20} className="drop-shadow-md" />
-          <span className="tracking-wide text-sm font-bold">Add to Cart</span>
-        </button>
-      </div>
     </div>
   );
 };

@@ -1,13 +1,23 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { CartItem, Product, ProductCustomization, Profile } from '../types';
+import { auth, db, handleFirestoreError, OperationType } from '../lib/firebase';
+import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 
 interface AppState {
   user: Profile | null;
+  loading: boolean;
   cart: CartItem[];
   favorites: string[]; // Product IDs
   
   setUser: (user: Profile | null) => void;
+  setLoading: (loading: boolean) => void;
+  
+  login: (phone: string, password: string) => Promise<void>;
+  register: (phone: string, password: string, name: string) => Promise<void>;
+  logout: () => void;
+  updateProfile: (updates: Partial<Profile>) => Promise<void>;
+  
   addToCart: (product: Product, customization: ProductCustomization, quantity: number) => void;
   removeFromCart: (cartItemId: string) => void;
   updateCartQuantity: (cartItemId: string, quantity: number) => void;
@@ -21,10 +31,79 @@ export const useAppStore = create<AppState>()(
   persist(
     (set, get) => ({
       user: null,
+      loading: false,
       cart: [],
       favorites: ['1', '2', '4', '6'],
       
       setUser: (user) => set({ user }),
+      setLoading: (loading) => set({ loading }),
+      
+      login: async (phone, password) => {
+        set({ loading: true });
+        try {
+          const userDoc = await getDoc(doc(db, 'users', phone));
+          if (userDoc.exists()) {
+            const userData = userDoc.data();
+            if (userData.password === password) {
+              set({ user: userData as Profile });
+            } else {
+              throw new Error('Invalid phone number or password');
+            }
+          } else {
+            throw new Error('User not found');
+          }
+        } catch (error) {
+          throw error;
+        } finally {
+          set({ loading: false });
+        }
+      },
+
+      register: async (phone, password, name) => {
+        set({ loading: true });
+        try {
+          const userDoc = await getDoc(doc(db, 'users', phone));
+          if (userDoc.exists()) {
+            throw new Error('Phone number already registered');
+          }
+
+          const newProfile: Profile & { password?: string } = {
+            id: phone,
+            name,
+            phone,
+            email: '',
+            loyaltyPoints: 0,
+            password
+          };
+
+          await setDoc(doc(db, 'users', phone), newProfile);
+          set({ user: newProfile as Profile });
+        } catch (error) {
+          throw error;
+        } finally {
+          set({ loading: false });
+        }
+      },
+
+      logout: () => {
+        set({ user: null });
+      },
+
+      updateProfile: async (updates) => {
+        const user = get().user;
+        if (!user) return;
+
+        set({ loading: true });
+        try {
+          const updatedUser = { ...user, ...updates };
+          await updateDoc(doc(db, 'users', user.id), updates);
+          set({ user: updatedUser });
+        } catch (error) {
+          handleFirestoreError(error, OperationType.UPDATE, `users/${user.id}`);
+        } finally {
+          set({ loading: false });
+        }
+      },
       
       addToCart: (product, customization, quantity) => {
         const cart = get().cart;
@@ -86,6 +165,11 @@ export const useAppStore = create<AppState>()(
     }),
     {
       name: 'drink-cafe-storage',
+      partialize: (state) => ({
+        cart: state.cart,
+        favorites: state.favorites,
+        user: state.user
+      }),
     }
   )
 );

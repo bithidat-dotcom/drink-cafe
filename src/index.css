@@ -36,6 +36,16 @@
     opacity: 1;
     transition: 0s;
   }
+
+  .guest-mode {
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  
+  .guest-mode img {
+    pointer-events: none;
+    -webkit-user-drag: none;
+  }
 }
 
 body {

@@ -3,6 +3,7 @@ import { motion } from 'motion/react';
 import { ArrowLeft, Clock, MapPin, Phone } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { cn } from '../lib/utils';
+import { useAppStore } from '../store/useAppStore';
 
 const stages = [
   { id: 'PLACED', label: 'ORDER PLACED', description: 'We have received your order' },
@@ -16,6 +17,13 @@ const stages = [
 export const OrderTracking: React.FC = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { user } = useAppStore();
+
+  React.useEffect(() => {
+    if (!user) {
+      navigate('/');
+    }
+  }, [user, navigate]);
   const currentStageIndex = 2; // Mocking "PREPARING"
 
   return (

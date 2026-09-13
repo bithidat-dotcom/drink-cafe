@@ -7,7 +7,13 @@ import { formatPrice, cn } from '../lib/utils';
 
 export const Checkout: React.FC = () => {
   const navigate = useNavigate();
-  const { cart, clearCart } = useAppStore();
+  const { cart, clearCart, user } = useAppStore();
+
+  React.useEffect(() => {
+    if (!user) {
+      navigate('/');
+    }
+  }, [user, navigate]);
   const [deliveryMethod, setDeliveryMethod] = useState<'Delivery' | 'Pickup'>('Delivery');
   const [paymentMethod, setPaymentMethod] = useState<'Cash' | 'Mobile' | 'Card'>('Card');
 

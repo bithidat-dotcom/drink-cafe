@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Layout } from './components/Layout';
 import { Home } from './pages/Home';
@@ -16,13 +16,14 @@ import { Loyalty } from './pages/Loyalty';
 import { AdminDashboard } from './pages/admin/Dashboard';
 import { AdminLogin } from './pages/admin/AdminLogin';
 
-import { Welcome } from './pages/Welcome';
+import { Auth } from './pages/Auth';
+import { useAppStore } from './store/useAppStore';
 
 export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Welcome />} />
+        <Route path="/" element={<Auth />} />
         <Route path="/home" element={<Layout />}>
           <Route index element={<Home />} />
           <Route path="menu" element={<Menu />} />
@@ -31,27 +32,12 @@ export default function App() {
           <Route path="orders" element={<Orders />} />
           <Route path="loyalty" element={<Loyalty />} />
           <Route path="notifications" element={<Notifications />} />
-        </Route>
-        
-        <Route path="/orders" element={<Layout />}>
-          <Route index element={<Orders />} />
-        </Route>
-
-        <Route path="/favorites" element={<Layout />}>
-          <Route index element={<Favorites />} />
-        </Route>
-
-        <Route path="/profile" element={<Layout />}>
-          <Route index element={<Profile />} />
-        </Route>
-        
-        <Route path="/notifications" element={<Layout />}>
-          <Route index element={<Notifications />} />
+          <Route path="cart" element={<Cart />} />
         </Route>
         
         <Route path="/product/:id" element={<ProductDetail />} />
-        <Route path="/cart" element={<Cart />} />
         <Route path="/checkout" element={<Checkout />} />
+        
         <Route path="/order-confirmation" element={<OrderConfirmation />} />
         <Route path="/order-tracking/:id" element={<OrderTracking />} />
         

@@ -2,11 +2,13 @@ import React from 'react';
 import { motion } from 'motion/react';
 import { Gift, Star, Clock, ChevronRight, Award, Coffee, Zap, Plus } from 'lucide-react';
 import { cn } from '../lib/utils';
+import { useAppStore } from '../store/useAppStore';
 
 export const Loyalty: React.FC = () => {
-  const points = 1240;
+  const { user } = useAppStore();
+  const points = user?.loyaltyPoints || 0;
   const nextRewardAt = 2000;
-  const progress = (points / nextRewardAt) * 100;
+  const progress = Math.min(100, (points / nextRewardAt) * 100);
 
   const rewards = [
     { id: '1', title: 'Free Coffee', points: 500, icon: Coffee, color: 'bg-orange-100 text-orange-600' },

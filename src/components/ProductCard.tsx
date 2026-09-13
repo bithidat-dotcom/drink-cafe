@@ -12,7 +12,7 @@ interface ProductCardProps {
 
 export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const navigate = useNavigate();
-  const { toggleFavorite, isFavorite, addToCart } = useAppStore();
+  const { toggleFavorite, isFavorite, addToCart, user } = useAppStore();
   const favorite = isFavorite(product.id);
 
   return (
@@ -57,7 +57,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         <div className="flex items-center justify-between w-full mt-1">
           <span className="font-extrabold text-[#C9794D] text-[16px]">${product.price.toFixed(2)}</span>
 
-          {/* Add to Cart Button matching Home button style */}
           <button
             onClick={(e) => {
               e.stopPropagation();

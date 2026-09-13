@@ -1,0 +1,65 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 1. Default Deny Catch-all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Global Helpers
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // --- Users Collection ---
+    match /users/{userId} {
+      allow get: if isOwner(userId);
+      allow create: if isOwner(userId) && isValidUser(incoming());
+      allow update: if isOwner(userId) && isValidUser(incoming()) && (
+        incoming().diff(existing()).affectedKeys().hasOnly(['name', 'phone', 'photoUrl', 'loyaltyPoints'])
+      );
+
+      function isValidUser(data) {
+        return data.keys().hasAll(['id', 'name', 'email', 'loyaltyPoints']) &&
+               data.id == request.auth.uid &&
+               data.name is string && data.name.size() <= 100 &&
+               data.email is string && data.email.size() <= 100 &&
+               data.loyaltyPoints is int &&
+               (!('phone' in data) || (data.phone is string && data.phone.size() <= 20)) &&
+               (!('photoUrl' in data) || (data.photoUrl is string && data.photoUrl.size() <= 500));
+      }
+    }
+
+    // --- Orders Collection ---
+    match /orders/{orderId} {
+      allow get: if isSignedIn() && (isOwner(existing().userId));
+      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isSignedIn() && isOwner(incoming().userId) && isValidOrder(incoming());
+      
+      function isValidOrder(data) {
+        return data.keys().hasAll(['id', 'userId', 'status', 'total', 'createdAt']) &&
+               isValidId(data.id) &&
+               data.userId == request.auth.uid &&
+               data.status in ['ORDER PLACED', 'CONFIRMED', 'PREPARING', 'READY', 'OUT FOR DELIVERY', 'DELIVERED'] &&
+               data.total is number &&
+               data.createdAt == request.time;
+      }
+    }
+  }
+}
