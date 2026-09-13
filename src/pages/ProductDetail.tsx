@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { ArrowLeft, Star, Heart, ShoppingCart } from 'lucide-react';
-import { PRODUCTS } from '../data';
 import { useAppStore } from '../store/useAppStore';
 import { cn } from '../lib/utils';
 import { ProductSize, ProductCustomization } from '../types';
@@ -10,8 +9,8 @@ import { ProductSize, ProductCustomization } from '../types';
 export const ProductDetail: React.FC = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const product = PRODUCTS.find(p => p.id === id);
-  const { addToCart, toggleFavorite, isFavorite, user } = useAppStore();
+  const { addToCart, toggleFavorite, isFavorite, user, products } = useAppStore();
+  const product = products.find(p => p.id === id);
 
   React.useEffect(() => {
     if (!user) {

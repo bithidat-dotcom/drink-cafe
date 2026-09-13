@@ -15,35 +15,48 @@ import { Notifications } from './pages/Notifications';
 import { Loyalty } from './pages/Loyalty';
 import { AdminDashboard } from './pages/admin/Dashboard';
 import { AdminLogin } from './pages/admin/AdminLogin';
-
-import { Auth } from './pages/Auth';
+import { ErrorPage } from './pages/ErrorPage';
+import { ErrorBoundary } from './components/ErrorBoundary';
 import { useAppStore } from './store/useAppStore';
 
+import { Auth } from './pages/Auth';
+
 export default function App() {
+  const fetchProducts = useAppStore(state => state.fetchProducts);
+
+  useEffect(() => {
+    fetchProducts();
+  }, [fetchProducts]);
+
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Auth />} />
-        <Route path="/home" element={<Layout />}>
-          <Route index element={<Home />} />
-          <Route path="menu" element={<Menu />} />
-          <Route path="favorites" element={<Favorites />} />
-          <Route path="profile" element={<Profile />} />
-          <Route path="orders" element={<Orders />} />
-          <Route path="loyalty" element={<Loyalty />} />
-          <Route path="notifications" element={<Notifications />} />
-          <Route path="cart" element={<Cart />} />
-        </Route>
-        
-        <Route path="/product/:id" element={<ProductDetail />} />
-        <Route path="/checkout" element={<Checkout />} />
-        
-        <Route path="/order-confirmation" element={<OrderConfirmation />} />
-        <Route path="/order-tracking/:id" element={<OrderTracking />} />
-        
-        <Route path="/admin" element={<AdminLogin />} />
-        <Route path="/admin/dashboard" element={<AdminDashboard />} />
-      </Routes>
-    </BrowserRouter>
+    <ErrorBoundary>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Auth />} />
+          <Route path="/home" element={<Layout />}>
+            <Route index element={<Home />} />
+            <Route path="menu" element={<Menu />} />
+            <Route path="favorites" element={<Favorites />} />
+            <Route path="profile" element={<Profile />} />
+            <Route path="orders" element={<Orders />} />
+            <Route path="loyalty" element={<Loyalty />} />
+            <Route path="notifications" element={<Notifications />} />
+            <Route path="cart" element={<Cart />} />
+          </Route>
+          
+          <Route path="/product/:id" element={<ProductDetail />} />
+          <Route path="/checkout" element={<Checkout />} />
+          
+          <Route path="/order-confirmation" element={<OrderConfirmation />} />
+          <Route path="/order-tracking/:id" element={<OrderTracking />} />
+          
+          <Route path="/admin" element={<AdminLogin />} />
+          <Route path="/admin/dashboard" element={<AdminDashboard />} />
+
+          <Route path="/error" element={<ErrorPage />} />
+          <Route path="*" element={<ErrorPage title="Page Not Found" message="The page you are looking for does not exist or has been moved." />} />
+        </Routes>
+      </BrowserRouter>
+    </ErrorBoundary>
   );
 }

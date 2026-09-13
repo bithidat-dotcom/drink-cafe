@@ -1,35 +1,24 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { CATEGORIES, PRODUCTS } from '../data';
+import { CATEGORIES } from '../data';
 import { ProductCard } from '../components/ProductCard';
 import { Search, SlidersHorizontal } from 'lucide-react';
 import { useSearchParams } from 'react-router-dom';
+import { useAppStore } from '../store/useAppStore';
 import { cn } from '../lib/utils';
 
-const MENU_CATEGORIES = [
-  'All',
-  'Espresso',
-  'Americano',
-  'Cappuccino',
-  'Latte',
-  'Mocha',
-  'Cold Coffee',
-  'Iced Latte',
-  'Frappé',
-  'Tea',
-  'Smoothies',
-  'Fresh Drinks',
-  'Snacks',
-  'Desserts'
-];
-
 export const Menu: React.FC = () => {
+  const { products } = useAppStore();
   const [searchParams, setSearchParams] = useSearchParams();
   const selectedCategory = searchParams.get('category') || 'All';
   const [searchQuery, setSearchQuery] = useState('');
 
-  const filteredProducts = PRODUCTS.filter(product => {
-    const matchesCategory = selectedCategory === 'All' || product.categoryId.toLowerCase().includes(selectedCategory.toLowerCase());
+  const filteredProducts = products.filter(product => {
+    // Match 'All', or exact categoryId (e.g. 'coffee'), or Category Name (e.g. 'Coffee')
+    const matchesCategory = selectedCategory === 'All' || 
+      product.categoryId.toLowerCase() === selectedCategory.toLowerCase() ||
+      CATEGORIES.find(c => c.id === product.categoryId)?.name.toLowerCase() === selectedCategory.toLowerCase();
+      
     const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesCategory && matchesSearch;
   });
@@ -55,18 +44,29 @@ export const Menu: React.FC = () => {
 
       {/* Category Tabs */}
       <div className="flex gap-2 overflow-x-auto py-4 px-4 scrollbar-hide">
-        {MENU_CATEGORIES.map((category) => (
+        <button
+          onClick={() => setSearchParams({ category: 'All' })}
+          className={cn(
+            "px-6 py-2.5 rounded-full text-sm font-semibold whitespace-nowrap transition-all",
+            selectedCategory === 'All'
+              ? "bg-[#4B3621] text-white shadow-lg shadow-[#4B3621]/20"
+              : "bg-white text-gray-500 border border-[#F5E6D3]/50 hover:bg-gray-50"
+          )}
+        >
+          All
+        </button>
+        {CATEGORIES.map((category) => (
           <button
-            key={category}
-            onClick={() => setSearchParams({ category })}
+            key={category.id}
+            onClick={() => setSearchParams({ category: category.id })}
             className={cn(
               "px-6 py-2.5 rounded-full text-sm font-semibold whitespace-nowrap transition-all",
-              selectedCategory === category
+              selectedCategory === category.id
                 ? "bg-[#4B3621] text-white shadow-lg shadow-[#4B3621]/20"
                 : "bg-white text-gray-500 border border-[#F5E6D3]/50 hover:bg-gray-50"
             )}
           >
-            {category}
+            {category.name}
           </button>
         ))}
       </div>

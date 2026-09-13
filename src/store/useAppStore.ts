@@ -2,16 +2,19 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { CartItem, Product, ProductCustomization, Profile } from '../types';
 import { auth, db, handleFirestoreError, OperationType } from '../lib/firebase';
-import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc, updateDoc, collection, getDocs, onSnapshot } from 'firebase/firestore';
+import { PRODUCTS as initialProducts } from '../data';
 
 interface AppState {
   user: Profile | null;
   loading: boolean;
   cart: CartItem[];
   favorites: string[]; // Product IDs
+  products: Product[]; // Combined server and static products
   
   setUser: (user: Profile | null) => void;
   setLoading: (loading: boolean) => void;
+  fetchProducts: () => void;
   
   login: (phone: string, password: string) => Promise<void>;
   register: (phone: string, password: string, name: string) => Promise<void>;
@@ -27,6 +30,8 @@ interface AppState {
   isFavorite: (productId: string) => boolean;
 }
 
+let isFetchingProducts = false;
+
 export const useAppStore = create<AppState>()(
   persist(
     (set, get) => ({
@@ -34,9 +39,30 @@ export const useAppStore = create<AppState>()(
       loading: false,
       cart: [],
       favorites: ['1', '2', '4', '6'],
+      products: initialProducts,
       
       setUser: (user) => set({ user }),
       setLoading: (loading) => set({ loading }),
+      
+      fetchProducts: () => {
+        if (isFetchingProducts) return;
+        isFetchingProducts = true;
+        try {
+          onSnapshot(collection(db, 'products'), (snapshot) => {
+            const serverProds = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Product));
+            // Merge server products with initial products. Server products take precedence by ID.
+            const merged = [...initialProducts];
+            serverProds.forEach(sp => {
+              const idx = merged.findIndex(p => p.id === sp.id);
+              if (idx >= 0) merged[idx] = sp;
+              else merged.push(sp);
+            });
+            set({ products: merged });
+          });
+        } catch (error) {
+          console.error("Failed to fetch products:", error);
+        }
+      },
       
       login: async (phone, password) => {
         set({ loading: true });

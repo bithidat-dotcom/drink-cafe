@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { BottomNav } from './BottomNav';
 import { Header } from './Header';
+import { ScrollUXButton } from './ScrollUXButton';
 
 import { useAppStore } from '../store/useAppStore';
 
@@ -23,6 +24,7 @@ export const Layout: React.FC = () => {
       <main className="max-w-md mx-auto relative z-10">
         <Outlet />
       </main>
+      <ScrollUXButton />
       <BottomNav />
     </div>
   );

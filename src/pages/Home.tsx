@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
-import { CATEGORIES, PRODUCTS } from '../data';
+import { CATEGORIES } from '../data';
 import { ProductCard } from '../components/ProductCard';
 import { Search, Mic, SlidersHorizontal, Plus, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -8,7 +8,7 @@ import { useAppStore } from '../store/useAppStore';
 
 export const Home: React.FC = () => {
   const navigate = useNavigate();
-  const { addToCart } = useAppStore();
+  const { addToCart, products } = useAppStore();
   const [selectedCategory, setSelectedCategory] = useState<string>('coffee');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [isSearching, setIsSearching] = useState(false);
@@ -24,14 +24,19 @@ export const Home: React.FC = () => {
     }
   };
 
-  const categoryProducts = PRODUCTS.filter(p => {
-    const matchesCat = selectedCategory === 'all' || p.categoryId === selectedCategory;
+  const categoryProducts = products.filter(p => {
+    // Match 'all' or exact categoryId or Category Name
+    const matchesCat = selectedCategory === 'all' || 
+      p.categoryId.toLowerCase() === selectedCategory.toLowerCase() ||
+      CATEGORIES.find(c => c.id === p.categoryId)?.name.toLowerCase() === selectedCategory.toLowerCase();
+      
     const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesCat && matchesSearch;
   });
 
-  const popularCoffees = categoryProducts.filter(p => p.isPopular);
-  const displayPopular = popularCoffees.length > 0 ? popularCoffees : categoryProducts;
+  // Popular items should be global across all categories, unless they search
+  const popularCoffees = products.filter(p => p.isPopular);
+  const displayPopular = popularCoffees.length > 0 ? popularCoffees : products.slice(0, 5);
 
   return (
     <div className="px-4 py-4 flex flex-col gap-6 text-[#2D1B08]">
@@ -49,7 +54,7 @@ export const Home: React.FC = () => {
           <p className="text-[10px] text-amber-200/70 mt-1 mb-3">Today Only • Special Promo</p>
           <motion.button 
             whileTap={{ scale: 0.95 }}
-            onClick={() => navigate(`/product/${PRODUCTS[0]?.id || '1'}`)}
+            onClick={() => navigate(`/product/${products[0]?.id || '1'}`)}
             className="bg-[#C9794D] text-white text-[11px] font-bold px-4 py-1.5 rounded-full w-fit shadow-md ripple-button"
           >
             Order Now

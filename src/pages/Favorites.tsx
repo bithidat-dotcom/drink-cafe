@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence, PanInfo } from 'motion/react';
 import { Heart, ShoppingBag, ChevronLeft, ChevronRight, Plus, Star, Zap, RefreshCw } from 'lucide-react';
-import { PRODUCTS } from '../data';
 import { Product, ProductSize } from '../types';
 import { useAppStore } from '../store/useAppStore';
 import { useNavigate } from 'react-router-dom';
@@ -9,10 +8,10 @@ import { cn } from '../lib/utils';
 
 export const Favorites: React.FC = () => {
   const navigate = useNavigate();
-  const { favorites, toggleFavorite, addToCart } = useAppStore();
+  const { favorites, toggleFavorite, addToCart, products } = useAppStore();
   
   // Filter products in favorites list
-  const favoriteProducts = PRODUCTS.filter(p => favorites.includes(p.id));
+  const favoriteProducts = products.filter(p => favorites.includes(p.id));
 
   // Sort so Coffee items appear 1st, then Tea, then Milkshake
   const sortedFavorites = [...favoriteProducts].sort((a, b) => {
@@ -116,7 +115,7 @@ export const Favorites: React.FC = () => {
     });
   };
 
-  const slideVariants = {
+  const slideVariants: any = {
     enter: (dir: number) => ({
       x: dir > 0 ? 280 : -280,
       opacity: 0,
